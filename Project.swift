@@ -3,6 +3,7 @@ import ProjectDescription
 // MARK: - Constants
 
 let name = "Calculator"
+let deploymentTarget: DeploymentTarget = .macOS(targetVersion: "12.6.4")
 let organizationnName = "jjgp.calculator"
 
 // MARK: - Info
@@ -21,6 +22,7 @@ let mainTarget = Target(
     platform: .macOS,
     product: .app,
     bundleId: "\(organizationnName).\(name)",
+    deploymentTarget: deploymentTarget,
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Targets/\(name)/Sources/**"],
     resources: ["Targets/\(name)/Resources/**"],
@@ -32,6 +34,7 @@ let testTarget = Target(
     platform: .macOS,
     product: .unitTests,
     bundleId: "\(organizationnName).\(name)Tests",
+    deploymentTarget: deploymentTarget,
     infoPlist: .default,
     sources: ["Targets/\(name)/Tests/**"],
     dependencies: [
