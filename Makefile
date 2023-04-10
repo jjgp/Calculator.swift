@@ -21,8 +21,9 @@ pre-commit-install:
 	@pre-commit install -t post-checkout -t post-merge
 
 .PHONY: test
+test: ARCH ?= arm64
 test:
-	xcodebuild test -workspace Calculator.xcworkspace -scheme $$scheme Calculator -destination "platform=macOS,arch=arm64"
+	xcodebuild test -workspace Calculator.xcworkspace -scheme $$scheme Calculator -destination "platform=macOS,arch=$(ARCH)"
 
 .PHONY: tuist_edit
 tuist_edit:
