@@ -21,6 +21,7 @@ let mainTarget = Target(
     platform: .macOS,
     product: .app,
     bundleId: "\(organizationnName).\(name)",
+    deploymentTarget: .macOS(targetVersion: "12.6.4"),
     infoPlist: .extendingDefault(with: infoPlist),
     sources: ["Targets/\(name)/Sources/**"],
     resources: ["Targets/\(name)/Resources/**"],
