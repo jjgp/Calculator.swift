@@ -1,8 +1,8 @@
 import SwiftUI
 
-/// The calculator engine for computing the display and values from the input keys
+/// An implementation of a calculator solver for computing the display and values from the input keys
 @MainActor
-final class Engine: ObservableObject {
+final class Solver: ObservableObject {
     @Published var display: String = "0"
 
     func send(_ key: Key) throws {

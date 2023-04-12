@@ -1,10 +1,10 @@
 import SwiftUI
 
 struct Display: View {
-    @EnvironmentObject private var engine: Engine
+    @EnvironmentObject private var solver: Solver
 
     var body: some View {
-        Text(engine.display)
+        Text(solver.display)
             .frame(height: Style.Display.height)
             .padding(.trailing, Style.Display.trailingPadding)
     }

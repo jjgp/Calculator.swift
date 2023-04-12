@@ -3,28 +3,28 @@ import XCTest
 @testable import Calculator
 
 @MainActor
-final class EngineTests: XCTestCase {
+final class SolverTests: XCTestCase {
     func testDisplayAfterSendingDigits() throws {
-        let engine = Engine()
+        let solver = Solver()
 
         // Should start as zero
-        XCTAssertEqual(engine.display, "0")
+        XCTAssertEqual(solver.display, "0")
 
         // Should remain zero
-        try engine.send(.zero)
-        XCTAssertEqual(engine.display, "0")
+        try solver.send(.zero)
+        XCTAssertEqual(solver.display, "0")
 
         // Should be 1
-        try engine.send(.one)
-        XCTAssertEqual(engine.display, "1")
+        try solver.send(.one)
+        XCTAssertEqual(solver.display, "1")
 
         // Should be 12
-        try engine.send(.two)
-        XCTAssertEqual(engine.display, "12")
+        try solver.send(.two)
+        XCTAssertEqual(solver.display, "12")
 
         // Should be 123 and etc...
-        try engine.send(.two)
-        XCTAssertEqual(engine.display, "123")
+        try solver.send(.two)
+        XCTAssertEqual(solver.display, "123")
     }
 
     func testAddingADecimal() throws {

@@ -10,11 +10,11 @@ struct KeyButton: View {
     }
 
     private let color: Color
-    @EnvironmentObject private var engine: Engine
     private let height: CGFloat
     private let key: Key
     @Environment(\.keyDownPublisher) private var keyDownMonitor
     @State private var opacity = Constants.normalOpacity
+    @EnvironmentObject private var solver: Solver
     private let width: CGFloat
 
     init(_ key: Key,
@@ -68,7 +68,7 @@ struct KeyButton: View {
 
     private func sendKey() {
         do {
-            try engine.send(key)
+            try solver.send(key)
         } catch {
             // TODO: display or sound an error
         }
