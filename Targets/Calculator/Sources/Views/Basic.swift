@@ -1,6 +1,6 @@
 import SwiftUI
 
-/// A view that represents lays out the basic keys of the calculator
+/// A view that lays out the basic keys of the calculator
 struct Basic: View {
     var body: some View {
         Grid(horizontalSpacing: Style.Grid.spacing, verticalSpacing: Style.Grid.spacing) {

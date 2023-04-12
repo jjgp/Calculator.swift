@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-/// A view to represent a clickable interface for a calculator key
+/// A view that provides a touchable interface for a calculator key
 struct KeyButton: View {
     private enum Constants {
         static let animationDuration = 0.1
