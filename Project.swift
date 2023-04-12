@@ -3,7 +3,7 @@ import ProjectDescription
 // MARK: - Constants
 
 let name = "Calculator"
-let deploymentTarget: DeploymentTarget = .macOS(targetVersion: "12.6.4")
+let deploymentTarget: DeploymentTarget = .macOS(targetVersion: "13.0")
 let organizationnName = "jjgp.calculator"
 
 // MARK: - Info
