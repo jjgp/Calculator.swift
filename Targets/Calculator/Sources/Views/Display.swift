@@ -1,9 +1,10 @@
 import SwiftUI
 
 struct Display: View {
+    @EnvironmentObject private var engine: Engine
+
     var body: some View {
-        // TODO: dynamic display of the text
-        Text("0")
+        Text(engine.display)
             .frame(height: Style.Display.height)
             .padding(.trailing, Style.Display.trailingPadding)
     }

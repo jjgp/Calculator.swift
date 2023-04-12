@@ -10,9 +10,10 @@ struct KeyButton: View {
     }
 
     private let color: Color
+    @EnvironmentObject private var engine: Engine
     private let height: CGFloat
     private let key: Key
-    @Environment(\.keyDownPublisher) var keyDownMonitor
+    @Environment(\.keyDownPublisher) private var keyDownMonitor
     @State private var opacity = Constants.normalOpacity
     private let width: CGFloat
 
@@ -40,14 +41,15 @@ struct KeyButton: View {
             self.onTapOrKeyDown()
         }
         .contentShape(Rectangle())
+        // Note, the order of gesture modifiers matters. Changing will break the functionality. Should, double check this!
+        .onTapGesture(perform: onTapOrKeyDown)
         .onLongPressGesture {
-            // TODO: action
+            self.sendKey()
         } onPressingChanged: { isPressed in
             withAnimation(.linear(duration: Constants.animationDuration)) {
                 opacity = isPressed ? Constants.pressedOpacity : Constants.normalOpacity
             }
         }
-        .onTapGesture(perform: onTapOrKeyDown)
     }
 
     private func onTapOrKeyDown() {
@@ -61,7 +63,15 @@ struct KeyButton: View {
             opacity = Constants.normalOpacity
         }
 
-        // TODO: action
+        sendKey()
+    }
+
+    private func sendKey() {
+        do {
+            try engine.send(key)
+        } catch {
+            // TODO: display or sound an error
+        }
     }
 }
 

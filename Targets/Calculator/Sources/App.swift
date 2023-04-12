@@ -3,10 +3,13 @@ import SwiftUI
 
 @main
 struct App: SwiftUI.App {
+    private let engine: Engine
     private let keyDownMonitor: Any?
-    let keyDownPublisher: AnyPublisher<NSEvent, Never>
+    private let keyDownPublisher: AnyPublisher<NSEvent, Never>
 
     init() {
+        engine = .init()
+
         let keyDownSubject = PassthroughSubject<NSEvent, Never>()
         let supportedCommands = Set(Key.allCases.map(\.command))
         keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
@@ -17,6 +20,7 @@ struct App: SwiftUI.App {
             keyDownSubject.send(event)
             return nil
         }
+
         keyDownPublisher = keyDownSubject.eraseToAnyPublisher()
     }
 
@@ -28,6 +32,7 @@ struct App: SwiftUI.App {
             }
             .fixedSize()
             .environment(\.keyDownPublisher, keyDownPublisher)
+            .environmentObject(engine)
         }
         .windowResizability(.contentSize)
         .windowToolbarStyle(.unified(showsTitle: false))
