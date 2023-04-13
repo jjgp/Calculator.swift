@@ -6,43 +6,40 @@ final class Solver: ObservableObject {
     struct State: Equatable {
         var fractional: String?
         var integer: String = "0"
-        var key: Key?
+        var `operator`: Key = .add
         var subtotal = 0.0
     }
 
     ///
     @Published var display: String = "0"
 
-    var state: State = .init()
+    private var state: State = .init()
 
     func send(_ key: Key) throws {
-        // TODO: if invalid operation like adding another decimal
-        let keyMeta = key.meta
+        let meta = key.meta
 
-        switch keyMeta.kind {
+        switch meta.kind {
         case .function:
-            handleFunction(key: key)
+            try handleFunction(key: key)
         case .operand:
-            handleOperand(keyMeta: keyMeta)
+            handleOperand(meta: meta)
         case .operator:
-            try handleOperator(key: key)
+            try handleOperator(key: state.operator)
+            state.operator = key
         }
 
-        handleDisplay(key: key, keyMeta: keyMeta)
-
-        state.key = key
+        handleDisplay(key: key, meta: meta)
     }
 
-    private func handleDisplay(key _: Key, keyMeta: KeyMeta) {
-        // TODO: more conditional formatting and display of operand or result
-        if state.subtotal > 0, keyMeta.kind == .operator {
+    private func handleDisplay(key _: Key, meta: KeyMeta) {
+        if meta.kind == .operator || meta.kind == .function {
             display = String(format: "%g", state.subtotal)
         } else {
             display = state.operand
         }
     }
 
-    private func handleFunction(key: Key) {
+    private func handleFunction(key: Key) throws {
         switch key {
         case .allClear:
             state = .init()
@@ -53,7 +50,8 @@ final class Solver: ObservableObject {
                 state.fractional = "."
             }
         case .equals:
-            break
+            try handleOperator(key: state.operator)
+            state.clear()
         case .percent:
             break
         case .sign:
@@ -63,13 +61,13 @@ final class Solver: ObservableObject {
         }
     }
 
-    private func handleOperand(keyMeta: KeyMeta) {
+    private func handleOperand(meta: KeyMeta) {
         if state.fractional != nil {
-            state.fractional?.append(keyMeta.text)
+            state.fractional?.append(meta.text)
         } else if state.integer != "0" {
-            state.integer.append(keyMeta.text)
-        } else if keyMeta.text != "0" {
-            state.integer = keyMeta.text
+            state.integer.append(meta.text)
+        } else if meta.text != "0" {
+            state.integer = meta.text
         }
     }
 
@@ -82,11 +80,10 @@ final class Solver: ObservableObject {
         case .subtract:
             state.subtotal -= operand
         case .multiply:
-            // TODO: when no subtotal
-            state.subtotal = (state.subtotal.isZero ? 1.0 : state.subtotal) * operand
+            state.subtotal *= operand
         case .divide:
             guard !operand.isZero else {
-                // TODO: throw error
+                // TODO: throw error or other way of updating UI / sounds
                 return
             }
 
@@ -99,7 +96,7 @@ final class Solver: ObservableObject {
     }
 }
 
-extension Solver.State {
+private extension Solver.State {
     mutating func clear() {
         fractional = nil
         integer = "0"
