@@ -1,12 +1,7 @@
 struct KeyMeta {
     enum Kind {
-        ///
         case function
-
-        ///
         case operand
-
-        ///
         case `operator`
     }
 

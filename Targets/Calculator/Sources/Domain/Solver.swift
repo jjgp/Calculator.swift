@@ -7,7 +7,7 @@ final class Solver: ObservableObject {
         var fractional: String?
         var integer: String = "0"
         var `operator`: Key = .add
-        var subtotal = 0.0
+        var subtotal: Double?
     }
 
     ///
@@ -32,8 +32,8 @@ final class Solver: ObservableObject {
     }
 
     private func handleDisplay(key _: Key, meta: KeyMeta) {
-        if meta.kind == .operator || meta.kind == .function {
-            display = String(format: "%g", state.subtotal)
+        if meta.kind != .operand, let subtotal = state.subtotal {
+            display = String(format: "%g", subtotal)
         } else {
             display = state.operand
         }
@@ -73,21 +73,22 @@ final class Solver: ObservableObject {
 
     private func handleOperator(key: Key) throws {
         let operand = Double(state.operand) ?? 0
+        let subtotal = state.subtotal ?? 0
 
         switch key {
         case .add:
-            state.subtotal += operand
+            state.subtotal = subtotal + operand
         case .subtract:
-            state.subtotal -= operand
+            state.subtotal = subtotal - operand
         case .multiply:
-            state.subtotal *= operand
+            state.subtotal = subtotal * operand
         case .divide:
             guard !operand.isZero else {
                 // TODO: throw error or other way of updating UI / sounds
                 return
             }
 
-            state.subtotal /= operand
+            state.subtotal = subtotal / operand
         default:
             fatalError("The Key must have Kind.operator and switch must handle the case")
         }
@@ -100,6 +101,7 @@ private extension Solver.State {
     mutating func clear() {
         fractional = nil
         integer = "0"
+        self.operator = .add
     }
 
     var operand: String {
