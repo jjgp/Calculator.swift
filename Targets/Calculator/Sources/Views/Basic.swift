@@ -1,11 +1,13 @@
 import SwiftUI
 
-/// A view that represents lays out the basic keys of the calculator
+/// A view that lays out the basic keys of the calculator
 struct Basic: View {
+    @EnvironmentObject private var solver: Solver
+
     var body: some View {
         Grid(horizontalSpacing: Style.Grid.spacing, verticalSpacing: Style.Grid.spacing) {
             GridRow {
-                KeyButton(.ac)
+                KeyButton(.allClear)
                 KeyButton(.sign)
                 KeyButton(.percent)
                 KeyButton(.divide)

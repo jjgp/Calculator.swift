@@ -1,7 +1,7 @@
 import Combine
 import SwiftUI
 
-/// A view to represent a clickable interface for a calculator key
+/// A view that provides a touchable interface for a calculator key
 struct KeyButton: View {
     private enum Constants {
         static let animationDuration = 0.1
@@ -12,8 +12,10 @@ struct KeyButton: View {
     private let color: Color
     private let height: CGFloat
     private let key: Key
-    @Environment(\.keyDownPublisher) var keyDownMonitor
+    private let keyMeta: KeyMeta
+    @Environment(\.keyDownPublisher) private var keyDownMonitor
     @State private var opacity = Constants.normalOpacity
+    @EnvironmentObject private var solver: Solver
     private let width: CGFloat
 
     init(_ key: Key,
@@ -24,6 +26,7 @@ struct KeyButton: View {
         self.color = color
         self.height = height
         self.key = key
+        keyMeta = key.meta
         self.width = width
     }
 
@@ -31,23 +34,24 @@ struct KeyButton: View {
         ZStack {
             color.opacity(opacity)
 
-            Text(key.text)
+            Text(keyMeta.text)
         }
         .frame(width: width, height: height)
         .onReceive(keyDownMonitor.filter { event in
-            event.characters == key.command
+            event.characters == keyMeta.command
         }) { _ in
             self.onTapOrKeyDown()
         }
         .contentShape(Rectangle())
+        // Note, the order of gesture modifiers matters. Changing will break the functionality. Should, double check this!
+        .onTapGesture(perform: onTapOrKeyDown)
         .onLongPressGesture {
-            // TODO: action
+            self.sendKey()
         } onPressingChanged: { isPressed in
             withAnimation(.linear(duration: Constants.animationDuration)) {
                 opacity = isPressed ? Constants.pressedOpacity : Constants.normalOpacity
             }
         }
-        .onTapGesture(perform: onTapOrKeyDown)
     }
 
     private func onTapOrKeyDown() {
@@ -61,12 +65,20 @@ struct KeyButton: View {
             opacity = Constants.normalOpacity
         }
 
-        // TODO: action
+        sendKey()
+    }
+
+    private func sendKey() {
+        do {
+            try solver.send(key)
+        } catch {
+            // TODO(Issue #13)
+        }
     }
 }
 
 struct Button_Previews: PreviewProvider {
     static var previews: some View {
-        KeyButton(.ac)
+        KeyButton(.allClear)
     }
 }

@@ -5,6 +5,7 @@ enum Style {
     enum Display {
         static let height: CGFloat = 48
         static let trailingPadding: CGFloat = 2
+        static let width: CGFloat = 231 // 4 * Grid.Key.width + 3 * Grid.spacing - 2 * trailingPadding
     }
 
     /// Styling constants related to the grid layout of the calculator

@@ -1,10 +1,15 @@
 import SwiftUI
 
 struct Display: View {
+    @EnvironmentObject private var solver: Solver
+
     var body: some View {
-        // TODO: dynamic display of the text
-        Text("0")
-            .frame(height: Style.Display.height)
-            .padding(.trailing, Style.Display.trailingPadding)
+        HStack {
+            Text(solver.display)
+                .lineLimit(1)
+                .frame(height: Style.Display.height)
+                .frame(maxWidth: Style.Display.width, alignment: .trailing)
+                .padding([.leading, .trailing], Style.Display.trailingPadding)
+        }
     }
 }
