@@ -179,11 +179,11 @@ final class SolverTests: XCTestCase {
     }
 
     func testSignChange() throws {
-        // TODO:
+        // TODO(Issue #10)
     }
 
     func testPercentage() throws {
-        // TODO:
+        // TODO(Issue #9)
     }
 
     func testAllClearResetsStateToZero() throws {
@@ -206,6 +206,6 @@ final class SolverTests: XCTestCase {
     }
 
     func testClearResetsOperandAndNotSubtotal() throws {
-        // TODO:
+        // TODO(Issue #11)
     }
 }

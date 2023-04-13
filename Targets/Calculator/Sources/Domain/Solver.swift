@@ -84,7 +84,7 @@ final class Solver: ObservableObject {
             state.subtotal = subtotal * operand
         case .divide:
             guard !operand.isZero else {
-                // TODO: throw error or other way of updating UI / sounds
+                // TODO(Issue #13): throw error or other way of updating UI / sounds
                 return
             }
 

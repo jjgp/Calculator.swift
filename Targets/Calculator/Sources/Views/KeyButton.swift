@@ -72,7 +72,7 @@ struct KeyButton: View {
         do {
             try solver.send(key)
         } catch {
-            // TODO: display or sound an error
+            // TODO(Issue #13)
         }
     }
 }
