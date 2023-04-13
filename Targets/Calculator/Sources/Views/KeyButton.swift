@@ -12,6 +12,7 @@ struct KeyButton: View {
     private let color: Color
     private let height: CGFloat
     private let key: Key
+    private let keyMeta: KeyMeta
     @Environment(\.keyDownPublisher) private var keyDownMonitor
     @State private var opacity = Constants.normalOpacity
     @EnvironmentObject private var solver: Solver
@@ -25,6 +26,7 @@ struct KeyButton: View {
         self.color = color
         self.height = height
         self.key = key
+        keyMeta = key.meta
         self.width = width
     }
 
@@ -32,11 +34,11 @@ struct KeyButton: View {
         ZStack {
             color.opacity(opacity)
 
-            Text(key.text)
+            Text(keyMeta.text)
         }
         .frame(width: width, height: height)
         .onReceive(keyDownMonitor.filter { event in
-            event.characters == key.command
+            event.characters == keyMeta.command
         }) { _ in
             self.onTapOrKeyDown()
         }
@@ -77,6 +79,6 @@ struct KeyButton: View {
 
 struct Button_Previews: PreviewProvider {
     static var previews: some View {
-        KeyButton(.ac)
+        KeyButton(.allClear)
     }
 }

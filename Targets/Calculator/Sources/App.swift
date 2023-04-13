@@ -3,25 +3,10 @@ import SwiftUI
 
 @main
 struct App: SwiftUI.App {
-    private let keyDownMonitor: Any?
-    private let keyDownPublisher: AnyPublisher<NSEvent, Never>
-    private let solver: Solver
+    private let environment: Environment
 
     init() {
-        let keyDownSubject = PassthroughSubject<NSEvent, Never>()
-        let supportedCommands = Set(Key.allCases.map(\.command))
-        keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
-            guard supportedCommands.contains(event.characters) else {
-                return event
-            }
-
-            keyDownSubject.send(event)
-            return nil
-        }
-
-        keyDownPublisher = keyDownSubject.eraseToAnyPublisher()
-
-        solver = .init()
+        environment = .init()
     }
 
     var body: some Scene {
@@ -31,10 +16,36 @@ struct App: SwiftUI.App {
                 Basic()
             }
             .fixedSize()
-            .environment(\.keyDownPublisher, keyDownPublisher)
-            .environmentObject(solver)
+            .environment(\.keyDownPublisher, environment.keyDownPublisher)
+            .environmentObject(environment.solver)
         }
         .windowResizability(.contentSize)
         .windowToolbarStyle(.unified(showsTitle: false))
+    }
+}
+
+private extension App {
+    @MainActor
+    final class Environment {
+        private let keyDownMonitor: Any?
+        let keyDownPublisher: AnyPublisher<NSEvent, Never>
+        let solver: Solver
+
+        init() {
+            let keyDownSubject = PassthroughSubject<NSEvent, Never>()
+            let supportedCommands = Set(Key.allCases.compactMap(\.meta.command))
+            keyDownMonitor = NSEvent.addLocalMonitorForEvents(matching: .keyDown) { event in
+                guard let characters = event.characters, supportedCommands.contains(characters) else {
+                    return event
+                }
+
+                keyDownSubject.send(event)
+                return nil
+            }
+
+            keyDownPublisher = keyDownSubject.eraseToAnyPublisher()
+
+            solver = .init()
+        }
     }
 }
