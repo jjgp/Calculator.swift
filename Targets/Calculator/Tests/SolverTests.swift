@@ -135,7 +135,9 @@ final class SolverTests: XCTestCase {
         XCTAssertEqual(solver.display, "0.25")
     }
 
-    func testDivisionByZero() throws {}
+    func testDivisionByZero() throws {
+        // TODO(Issue #13)
+    }
 
     func testNegativeNumbers() throws {
         let solver = Solver()
