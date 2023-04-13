@@ -5,6 +5,7 @@
 ## Requirements
 
 - macOS 13.0 or later
+- Xcode 14.3
 - [Homebrew](https://brew.sh)
 
 ## Getting stared
